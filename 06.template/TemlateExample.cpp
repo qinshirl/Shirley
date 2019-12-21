@@ -4,18 +4,20 @@
 #include "stdafx.h"
 #include "CMyList.hpp"
 
-//template function exmaple start:
+//模板，又被称为泛型
+
+//template function example start:
 template <typename AnyType>
 
 AnyType add( AnyType x, AnyType y)
 {
-    return x+y;
+    return x + y;
 }
 
-//template function exmaple end
+//template function example end
 
 
-//template class exmaple start:
+//template class example start:
 template <typename T>
 
 class CMyList
@@ -35,27 +37,27 @@ public:
         //a new inner class
         class MyIterator{
         private:
-            Node *pCurrent;
+            Node *m_pCurrent;
             
         public:
             MyIterator( Node *pNode )
             {
-                pCurrent = pNode;
+                m_pCurrent = pNode;
             }
            
             void operator ++(int)
             {
-                pCurrent = pCurrent->pNext;
+                m_pCurrent = m_pCurrent->pNext;
             }
 
             T & operator *()
             {
-                return pCurrent->data;
+                return m_pCurrent->data;
             }
 
             bool operator != ( MyIterator & iter )
             {
-                return iter.pCurrent != pCurrent;
+                return iter.m_pCurrent != m_pCurrent;
             }
 
         };
@@ -95,7 +97,7 @@ public:
             return MyIterator(0);
         }
 };
-//template class exmaple end
+//template class example end
 
 int main(int argc, char* argv[])
 {
