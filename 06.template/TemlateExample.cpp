@@ -2,19 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "CMyList.hpp"
 
 //模板，又被称为泛型
-
-//template function example start:
-template <typename AnyType>
-
-AnyType add( AnyType x, AnyType y)
-{
-    return x + y;
-}
-
-//template function example end
 
 
 //template class example start:
@@ -64,21 +53,24 @@ public:
         //class iterator end
 
         //belong to CMyList
+        //constructor
         CMyList()
         {
-            m_pHead = m_pTail = 0;
+            m_pHead = m_pTail = NULL;
         }
         
+        //add new node to the list
         void push_back( T param)
         {
             Node *pTemp = new Node;
             pTemp->data = param;
-            pTemp->pPre = pTemp->pNext = 0;
+            pTemp->pPre = pTemp->pNext = NULL;
             
-            if ( m_pHead == 0 )
+            if ( m_pHead == NULL)
             {
-                m_pHead = m_pTail = pTemp;
-                m_pHead->pNext = m_pHead->pPre = 0;
+                m_pHead = pTemp;
+                m_pTail = pTemp;
+                m_pHead->pNext = m_pHead->pPre = NULL;
             }
             else
             {
@@ -86,6 +78,37 @@ public:
                 m_pTail = pTemp;
             }
         }
+        
+        void remove(T param){
+            Node* temp = m_pHead;
+            //if delete head Node
+            if(param == m_pHead->data){
+                m_pHead = m_pHead->pNext;
+                delete temp;
+                return;
+            }
+
+            //traverse through the linked list to find the node
+            while(param != temp->data){
+                temp = temp->pNext;
+                if(temp == m_pTail && param != m_pTail->data){
+                    printf("parameter not found. \n");
+                    return;
+                }
+            }
+            //if deleting tail node
+            if(temp == m_pTail && param == m_pTail->data){
+                m_pTail = temp->pPre;
+                delete temp;
+                return;
+            }
+
+            //other cases: deleting the node in the middle
+            temp->pPre->pNext = temp->pNext;
+            temp->pNext->pPre = temp->pPre;
+            delete temp;        
+        }
+
 
         MyIterator begin()
         {
@@ -94,17 +117,13 @@ public:
 
         MyIterator end()
         {
-            return MyIterator(0);
+            return MyIterator(NULL);
         }
 };
 //template class example end
 
 int main(int argc, char* argv[])
 {
-    //test template function
-	printf("%d\n", add(100, 200) );
-    printf("%.2f\n", add(5.13, 4.28) );
-
 
     //test template class
     CMyList<int> myList;
@@ -113,6 +132,8 @@ int main(int argc, char* argv[])
     myList.push_back(88);
     myList.push_back(55);
     myList.push_back(999);
+    myList.remove(100);
+    myList.remove(222);
 
     CMyList<int>::MyIterator iter = myList.begin();
     while ( iter != myList.end() )
@@ -123,4 +144,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-
