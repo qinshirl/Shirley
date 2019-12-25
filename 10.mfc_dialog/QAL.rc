@@ -1,0 +1,413 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\QAL.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\QAL.ico"
+ICO_TMONLINE            ICON    DISCARDABLE     "res\\TMOnline.ico"
+ICO_QALKEY              ICON    DISCARDABLE     "res\\QALKey.ico"
+ICO_QQGAME              ICON    DISCARDABLE     "res\\QQGame.ico"
+ICO_QQOFFLINE           ICON    DISCARDABLE     "res\\QQOffline.ico"
+ICO_QQONLINE            ICON    DISCARDABLE     "res\\QQOnline.ico"
+ICO_TMOFFLINE           ICON    DISCARDABLE     "res\\TMOffline.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 79
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于QQ自动登录器"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,13,20,20
+    LTEXT           "QQ登录管理器 v1.55",IDC_STATIC,38,10,119,8,SS_NOPREFIX
+    LTEXT           "更方便操纵多QQ帐号的免费好工具!",IDC_STATIC,38,24,125,
+                    12
+    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "最后开发截止时间:2008年10月18日",IDC_STATIC,38,42,125,
+                    12
+    LTEXT           "狂人之家出品",IDC_STATIC,129,60,54,12
+END
+
+IDD_QAL_DIALOG DIALOGEX 0, 0, 228, 269
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "QQ登录管理器 v1.55"
+FONT 9, "宋体"
+BEGIN
+    DEFPUSHBUTTON   "启动帐号",BTN_STARTACCOUNT,169,46,50,14,WS_DISABLED
+    DEFPUSHBUTTON   "启动QQ",BTN_STARTQQ,169,66,50,14
+    DEFPUSHBUTTON   "增加帐号",BTN_ADDQQACCOUNT,169,86,50,14
+    DEFPUSHBUTTON   "上移",BTN_MOVEUP,169,106,50,14,WS_DISABLED
+    DEFPUSHBUTTON   "下移",BTN_MOVEDOWN,169,126,50,14,WS_DISABLED
+    DEFPUSHBUTTON   "选项设置",BTN_OPTIONS,169,146,50,14
+    DEFPUSHBUTTON   "导入帐号",BTN_IMPORTACCOUNT,169,166,50,14,WS_DISABLED
+    DEFPUSHBUTTON   "帮助/关于",BTN_ABOUT,169,186,50,14
+    PUSHBUTTON      "退出程序",IDCANCEL,169,206,50,14
+    CONTROL         132,IDC_STATIC,"Static",SS_BITMAP,0,0,227,30
+    GROUPBOX        "请选择您要启动的QQ帐号",IDC_STATIC,7,34,214,196
+    CONTROL         "List1",LST_QQACCOUNT,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,13,45,151,179
+    LTEXT           "Www.Gochina.Cn",IDC_STATIC,160,254,56,9,WS_DISABLED
+    EDITTEXT        EDT_KEYWORD,7,235,122,13,ES_AUTOHSCROLL
+    COMBOBOX        COM_SEARCHLIST,132,235,43,50,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "给我搜",BTN_SEARCH,179,235,42,13
+END
+
+DLG_ADDQQACCOUNT DIALOG DISCARDABLE  0, 0, 171, 161
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "增加QQ帐号"
+FONT 9, "宋体"
+BEGIN
+    LTEXT           "执行模式:",IDC_STATIC,15,23,40,10
+    COMBOBOX        CMB_LOGINMODLE,73,21,63,60,CBS_DROPDOWNLIST | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL
+    GROUPBOX        "请输入QQ信息",IDC_STATIC,7,7,157,125
+    CONTROL         "使用自定义名字",CHK_USENICKNAME,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,41,72,12
+    LTEXT           "设定名字",IDC_STATIC,15,56,34,9
+    LTEXT           "QQ号码",IDC_STATIC,15,72,34,9
+    LTEXT           "QQ密码",IDC_STATIC,15,87,34,9
+    EDITTEXT        EDT_NICKNAME,57,53,79,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        EDT_QQNUMBER,57,69,79,12,ES_AUTOHSCROLL
+    EDITTEXT        EDT_PASSWORD,57,85,79,12,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "隐身登录",CHK_HIDELOGIN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,57,102,68,11
+    CONTROL         "允许密码找回",CHK_ALLOWFINDPSW,"Button",BS_AUTOCHECKBOX | 
+                    WS_DISABLED | WS_TABSTOP,57,115,68,11
+    DEFPUSHBUTTON   "确定",IDOK,56,140,50,14
+    PUSHBUTTON      "取消",IDCANCEL,114,140,50,14
+END
+
+DLG_OPTIONS DIALOG DISCARDABLE  0, 0, 206, 185
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "设定"
+FONT 9, "宋体"
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,89,163,50,14
+    PUSHBUTTON      "取消",IDCANCEL,149,163,50,14
+    CONTROL         "List1",LST_QQPATH,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,7,7,192,48
+    DEFPUSHBUTTON   "清除",BTN_CLEAR,89,62,50,14
+    PUSHBUTTON      "浏览",BTN_BROWSE,149,62,50,14
+    CONTROL         "启动帐号后不关闭",CHK_NOCLOSE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,80,83,11
+    CONTROL         "允许自动检查更新",CHK_AUTOUPDATE,"Button",
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,112,80,83,11
+    CONTROL         "双击启动帐号,否则双击为编辑该帐号",CHK_DBCLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,96,183,11
+    CONTROL         "设置程序密码",CHK_PASSWORD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,111,66,11
+    CONTROL         "需密码启动",CHK_MUSTPASSWORD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,126,66,11
+    PUSHBUTTON      "设置密码",BTN_SETPASSWORD,78,116,51,13,WS_DISABLED
+    LTEXT           "使用帐号延迟登陆",IDC_STATIC,7,142,66,9
+    LISTBOX         LST_DELAYTIME,79,139,33,11,NOT LBS_NOTIFY | 
+                    LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+DLG_SETPASSWORD DIALOG DISCARDABLE  0, 0, 193, 91
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "设定程序密码"
+FONT 9, "宋体"
+BEGIN
+    ICON            ICO_QALKEY,IDC_STATIC,7,7,20,20
+    LTEXT           "旧的密码",IDC_STATIC,39,13,32,9
+    LTEXT           "新的密码",IDC_STATIC,39,31,32,9
+    LTEXT           "重新输入",IDC_STATIC,39,49,32,9
+    EDITTEXT        EDT_OLDPASSWORD,81,10,94,14,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        EDT_NEWPASSWORD,81,27,94,14,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        EDT_RETYPEPASSWORD,81,44,94,14,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,73,70,50,14
+    PUSHBUTTON      "取消",IDCANCEL,136,70,50,14
+END
+
+DLG_QALLOGIN DIALOG DISCARDABLE  0, 0, 151, 79
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "登录..."
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,15,21,20,20
+    GROUPBOX        "密码输入",IDC_STATIC,7,7,137,45
+    LTEXT           "本程序需要密码才能启动",IDC_STATIC,47,20,88,9
+    EDITTEXT        EDT_PASSWORD,48,30,88,13,ES_PASSWORD | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,7,58,50,14
+    PUSHBUTTON      "退出",IDCANCEL,94,58,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 72
+    END
+
+    IDD_QAL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 262
+    END
+
+    DLG_ADDQQACCOUNT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 164
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 154
+    END
+
+    DLG_OPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 199
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+
+    DLG_SETPASSWORD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 186
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 84
+    END
+
+    DLG_QALLOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 144
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 72
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+BMP_MAINLOGO            BITMAP  DISCARDABLE     "res\\mainlogo.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+MENU_MAIN_RIGHTCLICK MENU DISCARDABLE 
+BEGIN
+    POPUP "菜单"
+    BEGIN
+        MENUITEM "仅登录此号码",                MENU_ONLYTHISQQ
+        MENUITEM "导出为快捷",                  MENU_EXPORTLINK
+        MENUITEM "隐身",                        MENU_HIDEME
+        MENUITEM SEPARATOR
+        MENUITEM "删除",                        MENU_DELETEACCOUNT
+        MENUITEM "属性",                        MENU_ACCOUNTINFO
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+DLG_ADDQQACCOUNT DLGINIT
+BEGIN
+    CMB_LOGINMODLE, 0x403, 3, 0
+0x5151, "\000" 
+    CMB_LOGINMODLE, 0x403, 3, 0
+0x4d54, "\000" 
+    CMB_LOGINMODLE, 0x403, 7, 0
+0x5151, 0xced3, 0xb7cf, "\000" 
+    0
+END
+
+IDD_QAL_DIALOG DLGINIT
+BEGIN
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xf8cd, 0xb3d2, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xf4d2, 0xd6c0, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xedc8, 0xfebc, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xe7b5, 0xb0d3, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xbccd, 0xacc6, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xaad6, 0xb6ca, "\000" 
+    COM_SEARCHLIST, 0x403, 7, 0
+0xd1cb, 0xc2d0, 0xc5ce, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// 24
+//
+
+1                       24      DISCARDABLE     "res\\default1.bin"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,5,5,0
+ PRODUCTVERSION 1,5,5,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", "狂人之家\0"
+            VALUE "FileDescription", "帮您管理QQ登录的好工具\0"
+            VALUE "FileVersion", "1, 5, 5, 0\0"
+            VALUE "InternalName", "QAL.exe\0"
+            VALUE "LegalCopyright", "Www.Gochina.Cn\0"
+            VALUE "ProductVersion", "1, 5, 5, 0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 关于QQ登录管理器(&A)..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\QAL.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
