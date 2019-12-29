@@ -13,6 +13,7 @@ DWORD WINAPI Thread2Proc(  LPVOID lpParameter);
 int tickets = 100;
 CRITICAL_SECTION g_cs;
 
+
 //线程1入口函数
 DWORD WINAPI Thread1Proc(  LPVOID lpParameter)
 {
@@ -23,10 +24,13 @@ DWORD WINAPI Thread1Proc(  LPVOID lpParameter)
         Sleep(1);
         if(tickets > 0)
         {
-            Sleep(1);
+            Sleep(1000);
             printf("thread1 sell ticket : %d\n",tickets--);
+            MessageBeep (-1) ;
+
             //访问结束后释放临界区对象的使用权
             LeaveCriticalSection(&g_cs);
+
             Sleep(1);
         }
         else
@@ -50,7 +54,7 @@ DWORD WINAPI Thread2Proc(  LPVOID lpParameter)
         if(tickets > 0)
         {
             Sleep(1);
-            printf("thread2 sell ticket : %d\n",tickets--);
+            printf("thread2 sell ticket : %d\n",tickets++);
             //访问结束后释放临界区对象的使用权
             LeaveCriticalSection(&g_cs);
             Sleep(1);
@@ -73,6 +77,9 @@ int main()
     //初始化临界区
     InitializeCriticalSection(&g_cs);
 
+
+    
+
     //创建线程1
     hThread1 = CreateThread(NULL, 0, Thread1Proc, NULL, 0, NULL);
     
@@ -81,7 +88,7 @@ int main()
     
     
     //主线程休眠5秒，等待其他线程执行结束
-    Sleep(5 * 1000);
+    Sleep(600 * 1000);
 
     //关闭线程句柄
     CloseHandle(hThread1);

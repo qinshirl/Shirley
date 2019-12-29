@@ -78,7 +78,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
     {
         return 0;
     }
-    
+
+    //CenterWindow(hWnd);
     //显示窗口
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -157,6 +158,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if ( SHAPE_NONE == g_CurrentShape )
             {
                 MessageBox( hWnd, _T("choose shape from index"), _T("发啥神经"), MB_OK );
+                OutputDebugString("debug smth");
             }
             else
             {

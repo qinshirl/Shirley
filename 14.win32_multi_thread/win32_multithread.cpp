@@ -6,20 +6,22 @@
 
 DWORD ThreadFunctionA( LPVOID param )
 {
-    while ( 1 )
+    for(int i = 0; i < 10; i++)
     {
         printf( "Running in thread A ...\n" );
         Sleep(500);
     }
+    return 0;
 }
 
 DWORD ThreadFunctionB( LPVOID param )
 {
-    while ( 1 )
+    for(int i = 0; i < 10; i++)
     {
         printf( "Running in thread B ...\n" );
         Sleep(500);
     }
+    return 0;
 }
 
 int main(int argc, char* argv[])
