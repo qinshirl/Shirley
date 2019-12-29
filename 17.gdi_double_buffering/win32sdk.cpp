@@ -115,6 +115,8 @@ void DrawShapes( HWND hWnd )
 
     //缓存里的背景默认是黑色，要先涂白
     HBRUSH bBrush = CreateSolidBrush(RGB(255,255,255));
+
+    //the returned hOldBrush contains the previous brush selected
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemoryDC, bBrush);
     Rectangle(hMemoryDC, 0, 0, rc.right - rc.left, rc.bottom - rc.top);
     SelectObject(hMemoryDC, hOldBrush);
@@ -143,13 +145,20 @@ void DrawShapes( HWND hWnd )
             DeleteObject(hPen);
             
             //select the stored oldpen value back
-            SelectObject(hMemoryDC, hOldPen);
+            //SelectObject(hMemoryDC, hOldPen);
         }
         
         //draw eclipse
         else if ( SHAPE_CIRCLE == g_CurrentShape ){
+            HPEN hPen =CreatePen( PS_DASHDOTDOT, 2, RGB(0,255,255) );
+            //since the selectObject function returns the hPen value of the default(used) pen
+           (HPEN)SelectObject(hMemoryDC, hPen);
+            
             Ellipse( hMemoryDC, (g_iter_shapes->g_point_saved_start).x, (g_iter_shapes->g_point_saved_start).y,
                 (g_iter_shapes->g_point_saved_end).x, (g_iter_shapes->g_point_saved_end).y);
+            
+            DeleteObject(hPen);
+            
         }
         
         g_iter_shapes++;
@@ -244,7 +253,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_LBUTTONDOWN: //鼠标左键的按下消息
             if ( SHAPE_NONE == g_CurrentShape )
             {
-                MessageBox( hWnd, _T("choose shape from index"), _T("发啥神经"), MB_OK );
+                //MessageBox( hWnd, _T("choose shape from index"), _T("发啥神经"), MB_OK );
+                AfxMessageBox("shirley");
+
+                CWnd* test = CWnd::FromHandle(hWnd);
+                test->CenterWindow();
+                test->Detach();
             }
             else
             {
