@@ -74,6 +74,9 @@ void CCopyFileDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCopyFileDlg)
+	DDX_Control(pDX, BTN_BROWSE2, m_browse_to);
+	DDX_Control(pDX, BTN_BROWSE1, m_browse_from);
+	DDX_Control(pDX, BTN_CP, m_btn_cp);
 	DDX_Control(pDX, IDC_PROGRESSBAR, m_cp_progress);
 	DDX_Text(pDX, EBX_CPFROM, m_ebx_cpfrom);
 	DDX_Text(pDX, EBX_CPTO, m_cbx_cpto);
@@ -229,30 +232,37 @@ void CCopyFileDlg::OnBrowse2()
 	
 }
 
+DWORD ThreadFunction( LPVOID param )
+{
+    CCopyFileDlg* ptr = (CCopyFileDlg*)param;
+    ptr->copy_file();
+    return 0;
+}
+
 void CCopyFileDlg::OnCp() 
 {
 
-    m_cp_progress.SetPos(50);
+    m_cp_progress.SetPos(0);
     // CProgressCtrl
-    copy_file();
+    //copy_file();
+    CreateThread( NULL, NULL, (LPTHREAD_START_ROUTINE)ThreadFunction, this, NULL, NULL );
 
 
 }
 
-
-// 
-// fseek(fp, 0, SEEK_END);
-// size = ftell(fp);
-// 
-// QQPathStr.GetBuffer(0)
-
 void CCopyFileDlg::copy_file()
 {
+    m_btn_cp.EnableWindow(FALSE);
+    m_browse_from.EnableWindow(FALSE);
+    m_browse_to.EnableWindow(FALSE);
     FILE* file_src = fopen(m_ebx_cpfrom.GetBuffer(0), "rb");
 
     //check if successfully opened the file using file_src
     if ( !file_src  )
     {
+        m_btn_cp.EnableWindow(TRUE);
+        m_browse_from.EnableWindow(TRUE);
+        m_browse_to.EnableWindow(TRUE);
         return;
     }
     
@@ -275,6 +285,9 @@ void CCopyFileDlg::copy_file()
     if ( !file_dest )
     {
         fclose(file_src);
+        m_browse_from.EnableWindow(TRUE);
+        m_browse_to.EnableWindow(TRUE);
+        m_btn_cp.EnableWindow(TRUE);
         return;
     }
 
@@ -296,10 +309,10 @@ void CCopyFileDlg::copy_file()
         ncount += _read;
 
         //percentage of the copied bytes calculated 
-        float percent = (float)_read / (float)size;
+        float percent = (float)ncount / (float)size;
         int nPercent = (int)(percent * 100);
 
-
+        
         m_cp_progress.SetPos(nPercent);
 
         if ( feof(file_src) )
@@ -310,6 +323,9 @@ void CCopyFileDlg::copy_file()
     
     fclose(file_src);
     fclose(file_dest);
+    m_browse_from.EnableWindow(TRUE);
+    m_browse_to.EnableWindow(TRUE);
+    m_btn_cp.EnableWindow(TRUE);
 }
 
 

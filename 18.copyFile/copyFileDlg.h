@@ -21,6 +21,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCopyFileDlg)
 	enum { IDD = IDD_COPYFILE_DIALOG };
+	CButton	m_browse_to;
+	CButton	m_browse_from;
+	CButton	m_btn_cp;
 	CProgressCtrl	m_cp_progress;
 	CString	m_ebx_cpfrom;
 	CString	m_cbx_cpto;

@@ -32,7 +32,7 @@ ImplementationFile=copyFileDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_PROGRESSBAR
+LastObject=BTN_BROWSE1
 
 [CLS:CAboutDlg]
 Type=0
