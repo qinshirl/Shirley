@@ -27,7 +27,7 @@ router.get(/^\/page\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
 	var connection = CreateMySQLConnection();
 	connection.connect();
 
-	var sql = 'SELECT * FROM blog_article ORDER BY id desc limit ?,?';
+	var sql = 'SELECT id, category, title, summary, time FROM blog_article ORDER BY id desc limit ?,?';
 	var params = [Start, NumbersPerPage];
 	connection.query(sql, params, function(err, result) {
 		if(err) {
