@@ -14,6 +14,7 @@
 
         html, body {
             margin: 0;
+            font-family: "Times New Roman";
         }
 
         .head {
@@ -29,7 +30,7 @@
         .head_left_content {
             margin-top: 10px;
             margin-left: 40px;
-            ont-family: "Times New Roman";
+
             font-size: xx-large;
             font-weight: bold;
         }
@@ -58,19 +59,17 @@
         }
 
         .content_left {
-            height: 930px; /*模拟内容高度*/
             width: auto;
             margin-right: 300px;
         }
 
 
         .content_article {
-            background-color: #1E9FFF;
             width: auto;
+            background-color: red;
         }
 
         .pic_space {
-            /*height:200px;*/
             width: 200px;
             float: left;
         }
@@ -81,7 +80,6 @@
             border-style: solid;
             border-width: 5px;
             width: 100px;
-            /*height:100px;*/
         }
 
         .article_right {
@@ -90,17 +88,13 @@
         }
 
         .article_title {
-            /*height:20px;*/
             text-transform: uppercase;
             text-align: justify;
             margin-top: 10px;
             margin-left: 30px;
             margin-bottom: 5px;
-            font-family: "Times New Roman";
             font-size: larger;
             font-weight: bold;
-
-
         }
 
         .article_content {
@@ -128,7 +122,6 @@
             text-align: left;
             margin-top: 5px;
             margin-left: 10px;
-            font-family: "Times New Roman",serif;
             font-size: small;
         }
 
@@ -138,7 +131,6 @@
             text-align: right;
             margin-top: 5px;
             margin-right: 10px;
-            font-family: "Times New Roman",serif;
             font-size: small;
         }
 
@@ -160,7 +152,6 @@
         }
 
         .content_category_title_text {
-            font-family: "Times New Roman";
             font-size: large;
             padding-left: 10px;
             padding-top: 10px;
@@ -245,8 +236,20 @@
             <div class="content_seperator"></div>
 
             <!--最新文章-->
-            <div class="content_latest">
-                最新文章
+            <div class="content_category">
+                <div class="content_category_title_text">
+                    Latest
+                </div>
+                <div class="content_category_text">
+                    <ul>
+                        <li> some article here</li>
+                        <li> some article here</li>
+                        <li> some article here</li>
+                        <li> some article here</li>
+                    </ul>
+                </div>
+                <!--下方的div解决高度为0的问题-->
+                <div style="clear:both;"></div>
             </div>
 
         </div>
@@ -272,29 +275,6 @@
                             Shakespeare' have been translated iny performed all around the world.
                             Shakespeare' have been translated iny performed all around the world.
                             Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.Shakespeare' have been
-                            translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been traspeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.
-                            Shakespeare' have been translated iny performed all around the world.Shakespeare' have been
-                            translated iny performed all around the world.
-                            Shakespeare' have bee
-
                         </div>
                     </div>
                     <div class="article_bottom">
@@ -303,8 +283,6 @@
 
                     </div>
                 </div>
-                <!--下方的div解决高度为0的问题-->
-                <div style="clear:both;"></div>
             </div>
 
             <div class="content_seperator"></div>
@@ -340,8 +318,6 @@
 
                     </div>
                 </div>
-                <!--下方的div解决高度为0的问题-->
-                <div style="clear:both;"></div>
             </div>
 
             <div class="content_seperator"></div>
@@ -377,9 +353,6 @@
 
                     </div>
                 </div>
-
-                <!--下方的div解决高度为0的问题-->
-                <div style="clear:both;"></div>
             </div>
 
         </div>
