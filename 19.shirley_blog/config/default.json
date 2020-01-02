@@ -1,0 +1,11 @@
+{
+	"db": {
+		"mysql": {
+			"host": "localhost",
+			"port": "3306",
+			"user": "shirley",
+			"password": "jpUU4ZCGxdp9epLk",
+			"database": "shirley_database"
+		}
+	}
+}

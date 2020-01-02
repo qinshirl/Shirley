@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "shirley",
+      "script": "bin/www",
+      "env": {
+        "PORT": 3000
+      },
+      "log_date_format": "YYYY-MM-DD HH:mm:SS",
+      "log_file": "logs/shirley.log",
+      "error_file": "logs/shirley-err.log",
+      "out_file": "logs/shirley-out.log",
+      "pid_file": "logs/shirley.pid",
+      "exec_mode": "fork_mode",
+      "watch": false
+    }
+  ]
+}

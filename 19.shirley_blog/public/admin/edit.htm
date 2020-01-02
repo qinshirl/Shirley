@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>文章管理 - Shirley</title>
+		<link rel="stylesheet" href="../src/css/layui.css">
+		<script src="../js/vue.js"></script>
+		<style>
+			.layui-upload-img {
+				width: 360px;
+				height: 200px;
+				margin: 0 10px 10px 0;
+			}
+		</style>
+
+		<template id="template_category">
+			<option :value="category.id">{{category.name}}</option>
+		</template>
+
+		<script>
+			//供应商下拉列表VUE组件
+			Vue.component('category_element', {
+				props: ['category'],
+				template: '#template_category'
+			});
+		</script>
+	</head>
+
+	<body class="layui-layout-body">
+		<div class="layui-layout layui-layout-admin">
+			<div class="layui-header">
+				<div class="layui-logo">Shirley</div>
+				<!-- 头部区域（可配合layui已有的水平导航） -->
+				<ul class="layui-nav layui-layout-left">
+					<li class="layui-nav-item">
+						<a href="">控制台</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="layui-side layui-bg-black">
+				<div class="layui-side-scroll">
+					<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+					<ul class="layui-nav layui-nav-tree" lay-filter="test">
+						<li class="layui-nav-item layui-nav-itemed">
+							<a class="" href="list.htm">所有文章</a>
+							<dl class="layui-nav-child">
+								<dd>
+									<a href="list.htm">管理文章</a>
+								</dd>
+								<dd class="layui-this">
+									<a href="edit.htm">新增文章</a>
+								</dd>
+							</dl>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="layui-body">
+				<!-- 内容主体区域 -->
+				<div style="padding: 15px;">
+					<form class="layui-form" action="" lay-filter="main_form">
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">分类</label>
+							<div class="layui-input-block">
+								<select name="category" lay-verify="required" lay-filter="category" lay-search="" id="category_list">
+									<option value="">直接选择或搜索选择</option>
+									<option is="category_element" v-for="category in categorys" :key="category.id"
+											:id="category.id" :category="category"></option>
+								</select>
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">标题</label>
+							<div class="layui-input-block">
+								<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+							</div>
+						</div>
+
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">摘要</label>
+							<div class="layui-input-block">
+								<textarea placeholder="请输入摘要" class="layui-textarea" name="summary" lay-verify="required"></textarea>
+							</div>
+						</div>
+
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">正文</label>
+							<div class="layui-input-block">
+								<textarea id="tx_body" name="tx_body" placeholder="请输入内容" class="layui-textarea"></textarea>
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn" lay-submit="" lay-filter="submit_article">发布</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+			<div class="layui-footer">
+				<!-- 底部固定区域 -->
+				开发者: 刘航
+			</div>
+		</div>
+		<script src="../js/jquery.js"></script>
+		<script src="../src/layui.js"></script>
+		<script src="../ckeditor/ckeditor.js"></script>
+
+		<script>
+			function GetQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+				if (r != null) return unescape(r[2]);
+				return null;
+			}
+
+			var g_id = GetQueryString('id');
+
+			layui.use('element', function() {
+				var element = layui.element;
+			});
+
+			layui.use(['form', 'layedit'], function() {
+				var form = layui.form,
+					layer = layui.layer,
+					layedit = layui.layedit;
+
+				//自定义验证规则
+				form.verify({
+					title: function(value) {
+						if(value.length < 5) {
+							return '标题至少得5个字';
+						}
+					},
+					tx_body: function(value) {}
+				});
+
+				function CKupdate() {
+					for(instance in CKEDITOR.instances)
+						CKEDITOR.instances[instance].updateElement();
+				}
+
+				//监听提交
+				form.on('submit(submit_article)', function(data) {
+					CKupdate();
+
+					var CHtml = CKEDITOR.instances.tx_body.getData();
+					data.field.tx_body = CHtml;
+
+					var url = '/admin/add';
+					if (g_id) {
+						url = '/admin/update';
+						data.field.id = g_id;
+					}
+
+					$.ajax({
+						url: url,
+						data: data.field,
+						type: 'POST',
+						dataType: "json",
+						success: function(str) {
+							window.location.href = "./list.htm";
+						},
+						error: function(err) {
+							return layer.msg('添加失败');
+						}
+					});
+
+					return false;
+				});
+
+				//编辑器
+				CKEDITOR.replace('tx_body', {
+					language: 'zh-CN', //改成中文版
+					filebrowserImageUploadUrl: '/admin/upload_image'
+				});
+
+				//VUE绑定分类列表到SELECT元素
+				var category_vm = new Vue({
+					el: '#category_list',
+					data: {
+						categorys: null,
+					},
+					updated: function () {
+						//重新渲染表单
+						form.render();
+						getDetail();
+					}
+				});
+
+				//从服务器取分类列表
+				$.ajax({
+					url: '/admin/category_list',
+					type: 'GET',
+					dataType: "json",
+					success: function (obj) {
+						if (obj.code == -1) {
+							window.location.href = "/login.htm";
+							top.location.href = "/login.htm";
+							return;
+						} else if (obj.code == 0) {
+							category_vm.categorys = obj.data;
+						} else {
+							return layer.msg('取供分类列表失败<br />' + obj.msg);
+						}
+					},
+					error: function (err) {
+						return layer.msg('取供分类列表失败，请联系管理员');
+					}
+				});
+
+				function getDetail() {
+					//如果页面有id参数，那么需要给各控件赋值
+					if (g_id) {
+						$.ajax({
+							url: '/admin/detail/id/' + g_id,
+							type: 'GET',
+							dataType: "json",
+							success: function (obj) {
+								if (obj.code == -1) {
+									window.location.href = "/login.htm";
+									top.location.href = "/login.htm";
+									return;
+								} else if (obj.code == 0) {
+									//表单初始赋值
+									form.val('main_form', {
+										"title": obj.data[0].title,
+										"category": obj.data[0].category,
+										"summary": obj.data[0].summary,
+										"tx_body": obj.data[0].body,
+									});
+								} else {
+									return layer.msg('获取信息失败<br />' + obj.msg);
+								}
+							},
+							error: function (err) {
+								return layer.msg('获取信息失败');
+							}
+						});
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>文章管理 - Shirley</title>
+		<link rel="stylesheet" href="../src/css/layui.css">
+	</head>
+
+	<body class="layui-layout-body">
+		<div class="layui-layout layui-layout-admin">
+			<div class="layui-header">
+				<div class="layui-logo">Shirley</div>
+				<!-- 头部区域（可配合layui已有的水平导航） -->
+				<ul class="layui-nav layui-layout-left">
+					<li class="layui-nav-item">
+						<a href="">控制台</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="layui-side layui-bg-black">
+				<div class="layui-side-scroll">
+					<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+					<ul class="layui-nav layui-nav-tree" lay-filter="test">
+						<li class="layui-nav-item layui-nav-itemed">
+							<a class="" href="javascript:;">所有文章</a>
+							<dl class="layui-nav-child">
+								<dd class="layui-this">
+									<a href="list.htm">管理文章</a>
+								</dd>
+								<dd>
+									<a href="edit.htm">新增文章</a>
+								</dd>
+							</dl>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="layui-body">
+				<!-- 内容主体区域 -->
+				<div style="padding: 15px;">
+					管理文章
+
+					<table class="layui-hide" id="test" lay-filter="test"></table>
+				</div>
+			</div>
+
+			<div class="layui-footer">
+				<!-- 底部固定区域 -->
+				开发者: 刘航
+			</div>
+		</div>
+		<script src="../js/jquery.js"></script>
+		<script src="../src/layui.js"></script>
+
+		<script type="text/html" id="barDemo">
+			<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		</script>
+
+		<script>
+			layui.use('element', function() {
+				var element = layui.element;
+			});
+
+			layui.use('table', function() {
+				var table = layui.table;
+
+				table.render({
+					elem: '#test',
+					url: '/admin/list',
+					toolbar: '#toolbarDemo',
+					title: '用户数据表',
+					cols: [
+						[{
+							field: 'id',
+							title: 'ID',
+							width: 80,
+							fixed: 'left',
+							unresize: true,
+							sort: true
+						}, {
+							field: 'title',
+							title: '标题',
+							edit: 'text'
+						}, {
+							fixed: 'right',
+							title: '操作',
+							toolbar: '#barDemo',
+							width: 150
+						}]
+					],
+					page: true
+				});
+
+				//监听行工具事件
+				table.on('tool(test)', function(obj) {
+					var data = obj.data;
+					if(obj.event === 'del') {
+						layer.confirm('真的删除"' + data.title + '"么', function(index) {
+							//发请求来删除
+							$.ajax({
+								url: '/admin/delete/id/' + data.id,
+								//data: data.field,
+								type: 'GET',
+								dataType: "json",
+								success: function(str) {
+									obj.del();
+									return layer.msg('删除成功');
+								},
+								error: function(err) {
+									return layer.msg('删除失败');
+								}
+							});
+							layer.close(index);
+						});
+					} else if(obj.event === 'edit') {
+						window.location.href = './edit.htm?id=' + data.id;
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>
