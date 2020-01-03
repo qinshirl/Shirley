@@ -89,18 +89,21 @@ router.get(/^\/page\/([1-9]{1}[0-9]*)\/category\/([0-9]*)$/, function(req, res, 
 			connection.query(sql, params, function(err, result) {
 				if(err) {
 					res.send('[MYSQL ERROR] - ' + err.message);
+					connection.end();
 				} else {
-					result.count = count;
 					//格式化时间的格式
 					for ( var nIndex = 0; nIndex < result.length; nIndex++ )
 					{
 						result[nIndex].time = result[nIndex].time.Format("yyyy/MM/dd HH:mm:ss");
 					}
-					res.send(JSON.stringify(result));
+					var ret_obj = {
+						count: count,
+						data: result,
+					};
+					res.send(JSON.stringify(ret_obj));
+					connection.end();
 				}
 			});
-
-			connection.end();
 		}
 	});
 });

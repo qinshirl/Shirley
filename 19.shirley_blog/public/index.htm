@@ -85,8 +85,10 @@
     <div class="head">
         <div class="head_left">
             <div class="head_left_content">
-                <img wideth=auto height="80px" src="images/logo.jpg">
-                SHIRLEY'S BLOG
+                <a href="index.htm?category=0">
+                    <img wideth=auto height="80px" src="images/logo.jpg">
+                    SHIRLEY'S BLOG
+                </a>
             </div>
         </div>
         <div class="head_right">
@@ -183,7 +185,8 @@
     //从服务器请求文章列表
     axios.get('/list/page/' + g_CurrentPage + '/category/' + g_Category)
         .then(function (response) {
-            article_vm.articles = response.data;
+            article_vm.articles = response.data.data;
+            g_TotalCount = response.data.count;
 
             //取到总数据后，才能开始分页
             layui.use('laypage', function () {
