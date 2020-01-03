@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
+var indexRouter = require('./routes/index');
 var listRouter = require('./routes/list');
 var adminRouter = require('./routes/admin');
 
@@ -39,6 +40,7 @@ app.all('*', function(req, res, next) {
     }
 });
 
+app.use('/', indexRouter);
 app.use('/list', listRouter);
 app.use('/admin', adminRouter);
 
