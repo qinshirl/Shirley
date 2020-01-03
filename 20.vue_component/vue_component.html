@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+<template id="template_mybutton">
+    <button @click="count--">You clicked me {{ count }} times.</button>
+</template>
+
+<div id="test2">
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+
+    <button-test></button-test>
+    <button-test></button-test>
+    <button-test></button-test>
+</div>
+</body>
+
+<script>
+    //模板写在js里面
+    Vue.component('button-counter', {
+        data:
+            function () {
+                return {
+                    count: 0,
+
+                }
+            },
+        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    });
+
+    //模板写在js的外面
+    Vue.component('button-test', {
+        data:
+            function () {
+                return {
+                    count: 10,
+
+                }
+            },
+        template: '#template_mybutton'
+    })
+
+    new Vue({el: '#test2'})
+
+</script>
+</html>
+
+
