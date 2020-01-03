@@ -165,3 +165,19 @@ a:hover{
     height: 150px;
     text-align: center;
 }
+
+.article_detail{
+    float: left;
+    width: 700px;
+}
+
+.article_detail_body{
+    background-color: whitesmoke;
+    border-radius: 10px;
+    width: 690px;
+}
+
+.article_detail_bottom {
+    height: 30px;
+    width: 700px;
+}

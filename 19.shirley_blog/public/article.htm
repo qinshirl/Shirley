@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shirley's Blog</title>
+    <link rel="stylesheet" href="css/blog.css" media="all">
+    <link rel="stylesheet" href="src/css/layui.css" media="all">
+
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script src="../src/layui.js"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        p {
+            display: block;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+        }
+    </style>
+
+    <!--分类的列表模板-->
+    <template id="template_category">
+        <li><a :href='"index.htm?category="+category.id'>{{category.name}}</a></li>
+    </template>
+
+    <!--最新文章的列表模板-->
+    <template id="template_latest">
+        <li><a :href='"article.htm?id="+latest.id'>{{latest.title}}</a></li>
+    </template>
+
+
+    <script>
+        //分类组件
+        Vue.component('category_element', {
+            props: ['category'],
+            template: '#template_category'
+        });
+
+        //最新文章组件
+        Vue.component('latest_element', {
+            props: ['latest'],
+            template: '#template_latest'
+        });
+    </script>
+</head>
+<body>
+
+<div class="backgroud">
+
+    <!--头-->
+    <div class="head">
+        <div class="head_left">
+            <div class="head_left_content">
+                <img wideth=auto height="80px" src="images/logo.jpg">
+                SHIRLEY'S BLOG
+            </div>
+        </div>
+        <div class="head_right">
+            <div class="head_right_content">
+                <a href="index.htm?category=0">HOME</a> | <a href="article.htm?id=1">ABOUT ME</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="long_seperator"></div>
+    <!--正文-->
+    <div class="content">
+        <div class="content_seperator"></div>
+
+        <div class="content_right">
+            <!--分类-->
+            <div class="content_category">
+                <div class="content_category_title_text">
+                    CATEGORY
+                </div>
+                <div class="content_category_text" id="category_list">
+                    <ul>
+                        <li><a href="index.htm?category=0">All</a></li>
+                        <li is="category_element" v-for="category in categorys" :key="category.id"
+                            :category="category"></li>
+                    </ul>
+                </div>
+                <!--下方的div解决高度为0的问题-->
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="content_seperator"></div>
+
+            <!--最新文章-->
+            <div class="content_category" id="latest_list">
+                <div class="content_category_title_text">
+                    Latest
+                </div>
+                <div class="content_category_text">
+                    <ul>
+                        <li is="latest_element" v-for="latest in latests" :key="latest.id"
+                            :latest="latest"></li>
+                    </ul>
+                </div>
+                <!--下方的div解决高度为0的问题-->
+                <div style="clear:both;"></div>
+            </div>
+
+        </div>
+
+        <div class="content_left" id="article_detail">
+            <!--文章正文-->
+            <div class="content_article">
+                <div class="article_detail">
+                    <div class="article_title"> {{ title }} </div>
+                    <div class="article_detail_body">
+                        <div class="article_text" v-html="body">
+                        </div>
+                    </div>
+                    <div class="article_detail_bottom">
+                        <div class="article_category">{{ category }}</div>
+                        <div class="article_release_date">{{ time }}</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="content_seperator"></div>
+        </div>
+    </div>
+
+    <!--Footer-->
+    <div class="footer">
+        <br/>
+        <br/>
+        ©2020 Shirley Qin
+    </div>
+</div>
+
+<!--逻辑部分从这里开始-->
+<script>
+    //获取URL参数
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    //获取当前文章ID
+    var g_CurrentID = GetQueryString('id');
+
+    //Vue绑定文章信息
+    var article_vm = new Vue({
+        el: '#article_detail',
+        data: {
+            title: "xxx",
+            category: "fff",
+            body: "xxxx",
+            time: "2019"
+        },
+    });
+
+    //从服务器获取文章的详细内容
+    axios.get('/list/article/' + g_CurrentID)
+        .then(function (response) {
+            article_vm.title = response.data.data[0].title;
+            article_vm.category = response.data.data[0].category;
+            article_vm.body = response.data.data[0].body;
+            article_vm.time = response.data.data[0].time;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    //Vue绑定分类列表
+    var category_vm = new Vue({
+        el: '#category_list',
+        data: function () {
+            return {
+                categorys: null,
+            }
+        },
+    });
+
+    //从服务器请求分类列表
+    axios.get('/list/category')
+        .then(function (response) {
+            category_vm.categorys = response.data.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    //Vue绑定最新文章列表
+    var latest_vm = new Vue({
+        el: '#latest_list',
+        data: function () {
+            return {
+                latests: null,
+            }
+        },
+    });
+
+    //从服务器请求最新文章列表
+    axios.get('/list/latest')
+        .then(function (response) {
+            latest_vm.latests = response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+</script>
+</body>
+</html>

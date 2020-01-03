@@ -110,8 +110,10 @@ router.get(/^\/article\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
 	var connection = CreateMySQLConnection();
 	connection.connect();
 
-	var sql = 'SELECT * from blog_article where id = ?';
+	var sql = 'SELECT blog_article.id, blog_category.name as category, title, body, time FROM blog_article ' +
+		'LEFT JOIN blog_category ON blog_article.category = blog_category.id where blog_article.id = ?';
 	var params = [parseInt(req.params[0])];
+
 	connection.query(sql, params, function(err, result) {
 		if(err) {
 			var result = {
@@ -121,6 +123,17 @@ router.get(/^\/article\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
 			res.send(JSON.stringify(result));
 			connection.end();
 		} else {
+			if ( !result.length )
+			{
+				var result = {
+					code: 1,
+					msg: "not exist"
+				};
+				res.send(JSON.stringify(result));
+				connection.end();
+				return;
+			}
+			result[0].time = result[0].time.Format("yyyy/MM/dd HH:mm:ss");
 			var ret_obj = {
 				code: 0,
 				msg: "",
