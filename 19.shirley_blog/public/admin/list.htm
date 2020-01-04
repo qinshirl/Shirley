@@ -107,9 +107,15 @@
 								//data: data.field,
 								type: 'GET',
 								dataType: "json",
-								success: function(str) {
-									obj.del();
-									return layer.msg('删除成功');
+								success: function(json_obj) {
+									if (json_obj.code == -1) {
+										window.location.href = "/admin/login.htm";
+										top.location.href = "/admin/login.htm";
+										return;
+									} else if (json_obj.code == 0) {
+										obj.del();
+										return layer.msg('删除成功');
+									}
 								},
 								error: function(err) {
 									return layer.msg('删除失败');

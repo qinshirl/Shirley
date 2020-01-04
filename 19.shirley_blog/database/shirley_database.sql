@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2020-01-02 17:22:57
+-- 生成日期： 2020-01-04 15:52:30
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -48,6 +48,18 @@ CREATE TABLE `blog_category` (
   `name` varchar(120) COLLATE utf8_unicode_ci NOT NULL COMMENT '分类名称'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `blog_user`
+--
+
+CREATE TABLE `blog_user` (
+  `id` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '用户名',
+  `password` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '用户密码'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- 转储表的索引
 --
@@ -67,6 +79,13 @@ ALTER TABLE `blog_category`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `blog_user`
+--
+ALTER TABLE `blog_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `name` (`name`);
+
+--
 -- 在导出的表使用AUTO_INCREMENT
 --
 
@@ -81,6 +100,12 @@ ALTER TABLE `blog_article`
 --
 ALTER TABLE `blog_category`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '分类ID';
+
+--
+-- 使用表AUTO_INCREMENT `blog_user`
+--
+ALTER TABLE `blog_user`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID';
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

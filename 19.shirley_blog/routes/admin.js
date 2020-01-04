@@ -14,29 +14,38 @@ function SendErrJson(res, err) {
 }
 
 var auth = function(req, res, next) {
-	//鉴定用户  
-	//如果鉴定失败，则调用next(new Error('Not authorized'));  
-	//或者res.send(401);
-
-	/*
-	if(req.session.userName == "shirley") {
+	//鉴定用户
+	if(req.session.authorized === 1) {
 		return next();
 	} else {
-		return next(res.sendStatus(401));
+		var result = {
+			code: -1,
+			msg: "登录超时，请<a href=\"#\" onclick=\"top.location.href='/admin/login.htm';window.location.href='/admin/login.htm';\"><font color='red'>重新登录</font></a>"
+		};
+		return res.send(JSON.stringify(result));
 	}
-	*/
 
-	//Debug时直接开启这个，避免反复登录
 	return next();
 }
 
 router.get('/login', function(req, res, next) {
-	if(req.query.username == 'shirley' && req.query.password == 'my_password') {
-		req.session.userName = req.query.username; // 登录成功，设置 session		
-		res.redirect('/admin/list.htm');
-	} else {
-		res.redirect('/admin/login.htm');
-	}
+	var sql = 'select * from blog_user where `name` = ?';
+	var params = [req.query.username];
+
+	database.QueryMySQL(sql, params).then(
+		function (result) {
+			if (result[0] && result[0].password === req.query.password) {
+				req.session.authorized = 1;
+				res.redirect('/admin/list.htm');
+			} else {
+				res.redirect('/admin/login.htm');
+			}
+		}
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 router.post('/add', auth, function(req, res, next) {
@@ -151,8 +160,7 @@ router.get(/^\/delete\/id\/([1-9]{1}[0-9]*)$/, auth, function(req, res, next) {
 	database.QueryMySQL( sql, params ).then(
 		function (result) {
 			var ret_obj = {
-				code: 0,
-				data: result
+				code: 0
 			};
 			res.send(JSON.stringify(ret_obj));
 		}
@@ -228,7 +236,7 @@ function mkdirsSync(dirpath, mode) {
 	return true;
 }
 
-router.post('/upload_image', function(req, res) {
+router.post('/upload_image', auth, function(req, res) {
 
 	var today = new Date();
 	var folder = today.getFullYear() + "" + (today.getMonth() + 1) + "" + today.getDate();

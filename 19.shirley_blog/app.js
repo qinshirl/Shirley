@@ -20,7 +20,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-  	maxAge : 1000 * 60 * 15
+  	maxAge : 1000 * 60 * 30 //半小时无操作视为用户退出
   }
 }));
 
