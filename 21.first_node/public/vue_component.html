@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+</head>
+
+<template id="website_tmp">
+    <div>{{parament_obj.id}} xxx {{parament_obj.name}}</div>
+</template>
+
+<body>
+
+<div id="website_list">
+    <website_display v-for="single_obj in websites" :key="single_obj.id"
+        :parament_obj="single_obj"></website_display>
+</div>
+
+</body>
+
+<script>
+    Vue.component('website_display', {
+        props: ['parament_obj'],
+        template: '#website_tmp'
+    });
+
+    var vm_websites = new Vue({
+        el: '#website_list',
+        data: function () {
+            return {
+                websites: null,
+            }
+        },
+    });
+
+    axios.get('/all_data')
+        .then(function (response) {
+            vm_websites.websites = response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+
+</script>
+</html>
+
+
