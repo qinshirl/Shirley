@@ -5,7 +5,8 @@
 			"port": "3306",
 			"user": "shirley",
 			"password": "jpUU4ZCGxdp9epLk",
-			"database": "shirley_database"
+			"database": "shirley_database",
+			"max_connections": 5
 		}
 	}
 }

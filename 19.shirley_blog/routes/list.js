@@ -1,7 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var config = require('config');
-var mysql = require('mysql');
+var database = require('./database')
+
+function SendErrJson(res, err) {
+	var result = {
+		code: 1, //TODO: 非零应该表示具体错误是什么，这里如果出错先统一返回1
+		msg: err ? err.message : "Unknown Error"
+	};
+	res.send(JSON.stringify(result));
+}
 
 Date.prototype.Format = function(fmt){
 	var o = {
@@ -26,16 +33,6 @@ Date.prototype.Format = function(fmt){
 	return fmt;
 };
 
-function CreateMySQLConnection() {
-	var config_mysql = config.get('db.mysql');
-	return mysql.createConnection({
-		host: config_mysql.host,
-		user: config_mysql.user,
-		password: config_mysql.password,
-		database: config_mysql.database
-	});
-}
-
 //全部文章，分页
 router.get(/^\/page\/([1-9]{1}[0-9]*)\/category\/([0-9]*)$/, function(req, res, next) {
 	//第几页
@@ -48,30 +45,20 @@ router.get(/^\/page\/([1-9]{1}[0-9]*)\/category\/([0-9]*)$/, function(req, res, 
 	//在数据库里面应该是从第几条开始，从URL参数里面取出来
 	var Start = CurrentPage * NumbersPerPage - NumbersPerPage;
 
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	var sql = null;
 	var param = null;
 	if(CurrentCategory == 0){
 		sql = 'SELECT count(*) as count from blog_article';
-		param = [];
+		params = [];
 	}
 	else{
 		sql = 'SELECT count(*) as count from blog_article where category = ?';
-		param = [CurrentCategory];
+		params = [CurrentCategory];
 	}
 
 	var count = 0;
-	connection.query(sql, param, function(err, result) {
-		if (err) {
-			var result = {
-				statu: 0,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
 			count = result[0].count;
 
 			var sql = null;
@@ -85,47 +72,38 @@ router.get(/^\/page\/([1-9]{1}[0-9]*)\/category\/([0-9]*)$/, function(req, res, 
 				var sql = 'SELECT blog_article.id, blog_category.name as category, title, summary, time FROM blog_article LEFT JOIN blog_category ON blog_article.category = blog_category.id where blog_article.category = ? order by blog_article.id desc limit ?,?';
 				var params = [CurrentCategory, Start, NumbersPerPage];
 			}
-
-			connection.query(sql, params, function(err, result) {
-				if(err) {
-					res.send('[MYSQL ERROR] - ' + err.message);
-					connection.end();
-				} else {
-					//格式化时间的格式
-					for ( var nIndex = 0; nIndex < result.length; nIndex++ )
-					{
-						result[nIndex].time = result[nIndex].time.Format("yyyy/MM/dd HH:mm:ss");
-					}
-					var ret_obj = {
-						count: count,
-						data: result,
-					};
-					res.send(JSON.stringify(ret_obj));
-					connection.end();
-				}
-			});
+			return database.QueryMySQL( sql, params );
 		}
-	});
+	).then(
+		function ( result ) {
+			//格式化时间的格式
+			for ( var nIndex = 0; nIndex < result.length; nIndex++ )
+			{
+				result[nIndex].time = result[nIndex].time.Format("yyyy/MM/dd HH:mm:ss");
+			}
+			var ret_obj = {
+				code: 0,
+				count: count,
+				data: result,
+			};
+			res.send(JSON.stringify(ret_obj));
+		}
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 //文章详情
 router.get(/^\/article\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
 
 	var sql = 'SELECT blog_article.id, blog_category.name as category, title, body, time FROM blog_article ' +
 		'LEFT JOIN blog_category ON blog_article.category = blog_category.id where blog_article.id = ?';
 	var params = [parseInt(req.params[0])];
 
-	connection.query(sql, params, function(err, result) {
-		if(err) {
-			var result = {
-				code: 1,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
 			if ( !result.length )
 			{
 				var result = {
@@ -133,7 +111,6 @@ router.get(/^\/article\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
 					msg: "not exist"
 				};
 				res.send(JSON.stringify(result));
-				connection.end();
 				return;
 			}
 			result[0].time = result[0].time.Format("yyyy/MM/dd HH:mm:ss");
@@ -143,51 +120,49 @@ router.get(/^\/article\/([1-9]{1}[0-9]*)$/, function(req, res, next) {
 				data: result
 			};
 			res.send(JSON.stringify(ret_obj));
-			connection.end();
 		}
-	});
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 router.get('/category', function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	var sql = 'SELECT * from blog_category order by id desc';
-	connection.query(sql, function(err, result) {
-		if(err) {
-			var result = {
-				code: 1,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
+
+	database.QueryMySQL( sql ).then(
+		function (result) {
 			var ret_obj = {
 				code: 0,
 				data: result
 			};
 			res.send(JSON.stringify(ret_obj));
-
-			connection.end();
 		}
-	});
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 //最新文章，不分页
 router.get('/latest', function (req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	var sql = 'SELECT id, title FROM blog_article order by id desc limit 0, 20';
-	connection.query(sql, function (err, result) {
-		if (err) {
-			res.send('[MYSQL ERROR] - ' + err.message);
-			connection.end();
-		} else {
-			res.send(JSON.stringify(result));
-			connection.end();
+
+	database.QueryMySQL( sql ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0,
+				data: result
+			};
+			res.send(JSON.stringify(ret_obj));
 		}
-	});
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 module.exports = router;

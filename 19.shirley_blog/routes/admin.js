@@ -1,19 +1,16 @@
 var express = require('express');
-var router = express.Router();
-var config = require('config');
-var mysql = require('mysql');
+var router = express.Router()
 var fs = require("fs");
 var path = require('path');
 var formidable = require('formidable');
+var database = require('./database')
 
-function CreateMySQLConnection() {
-	var config_mysql = config.get('db.mysql');
-	return mysql.createConnection({
-		host: config_mysql.host,
-		user: config_mysql.user,
-		password: config_mysql.password,
-		database: config_mysql.database
-	});
+function SendErrJson(res, err) {
+	var result = {
+		code: 1, //TODO: 非零应该表示具体错误是什么，这里如果出错先统一返回1
+		msg: err ? err.message : "Unknown Error"
+	};
+	res.send(JSON.stringify(result));
 }
 
 var auth = function(req, res, next) {
@@ -49,28 +46,21 @@ router.post('/add', auth, function(req, res, next) {
 	var summary = req.body.summary;
 	var body = req.body.tx_body;
 
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	var sql = 'INSERT INTO blog_article(title, category, summary, body) VALUES(?,?,?,?)';
 	var params = [title, category, summary, body];
 
-	connection.query(sql, params, function(err, result) {
-		if(err) {
-			var result = {
-				statu: 0,
-				msg: err.message
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0
 			};
-			res.send(JSON.stringify(result));
-		} else {
-			var result = {
-				success: 1
-			};
-			res.send(JSON.stringify(result));
+			res.send(JSON.stringify(ret_obj))
 		}
-	});
-
-	connection.end();
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 router.post('/update', auth, function(req, res, next) {
@@ -81,34 +71,24 @@ router.post('/update', auth, function(req, res, next) {
 	var summary = req.body.summary;
 	var body = req.body.tx_body;
 
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	var sql = 'UPDATE blog_article set title = ?, category = ?, summary = ?, body = ? where id = ?';
 	var params = [title, category, summary, body, id];
 
-	connection.query(sql, params, function(err, result) {
-		if(err) {
-			var result = {
-				statu: 0,
-				msg: err.message
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0
 			};
-			res.send(JSON.stringify(result));
-		} else {
-			var result = {
-				success: 1
-			};
-			res.send(JSON.stringify(result));
+			res.send(JSON.stringify(ret_obj))
 		}
-	});
-
-	connection.end();
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 router.get('/list', auth, function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
 	//从第几页开始
 	var CurrentPage = req.query.page ? parseInt(req.query.page) : 1;
 
@@ -120,115 +100,86 @@ router.get('/list', auth, function(req, res, next) {
 
 	var sql = 'SELECT count(*) as count from blog_article';
 	var count = 0;
-	connection.query(sql, function(err, result) {
-		if(err) {
-			var result = {
-				statu: 0,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
+
+	database.QueryMySQL( sql ).then(
+		function (result) {
 			count = result[0].count;
 			var sql = 'SELECT id, title FROM blog_article ORDER BY id desc limit ?,?';
 			var params = [Start, NumbersPerPage];
 
-			connection.query(sql, params, function(err, result) {
-				if(err) {
-					var result = {
-						statu: 0,
-						msg: err.message
-					};
-					res.send(JSON.stringify(result));
-				} else {
-					var ret_obj = {
-						code: 0,
-						msg: "",
-						count: count,
-						data: result
-					};
-					res.send(JSON.stringify(ret_obj));
-				}
-			});
-			connection.end();
+			return database.QueryMySQL( sql, params );
 		}
-	});
-});
-
-router.get('/category_list', auth, function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
-	var sql = 'SELECT * from blog_category';
-	connection.query(sql, function(err, result) {
-		if(err) {
-			var result = {
-				statu: 0,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
-			var ret_obj = {
-				code: 0,
-				data: result
-			};
-			res.send(JSON.stringify(ret_obj));
-
-			connection.end();
-		}
-	});
-});
-
-router.get(/^\/delete\/id\/([1-9]{1}[0-9]*)$/, auth, function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
-	var sql = 'delete FROM blog_article where id = ?';
-	var params = [parseInt(req.params[0])];
-
-	connection.query(sql, params, function(err, result) {
-		if(err) {
-			var result = {
-				statu: 0,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-		} else {
-			var result = {
-				success: 1
-			};
-			res.send(JSON.stringify(result));
-		}
-	});
-
-	connection.end();
-});
-
-router.get(/^\/detail\/id\/([1-9]{1}[0-9]*)$/, auth, function(req, res, next) {
-	var connection = CreateMySQLConnection();
-	connection.connect();
-
-	var sql = 'SELECT * from blog_article where id = ?';
-	var params = [parseInt(req.params[0])];
-	connection.query(sql, params, function(err, result) {
-		if(err) {
-			var result = {
-				code: 1,
-				msg: err.message
-			};
-			res.send(JSON.stringify(result));
-			connection.end();
-		} else {
+	).then(
+		function (result) {
 			var ret_obj = {
 				code: 0,
 				msg: "",
+				count: count,
 				data: result
 			};
 			res.send(JSON.stringify(ret_obj));
-			connection.end();
 		}
-	});
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
+});
+
+router.get('/category_list', auth, function(req, res, next) {
+	var sql = 'SELECT * from blog_category';
+
+	database.QueryMySQL( sql ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0,
+				data: result
+			};
+			res.send(JSON.stringify(ret_obj));
+		}
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
+});
+
+router.get(/^\/delete\/id\/([1-9]{1}[0-9]*)$/, auth, function(req, res, next) {
+	var sql = 'delete FROM blog_article where id = ?';
+	var params = [parseInt(req.params[0])];
+
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0,
+				data: result
+			};
+			res.send(JSON.stringify(ret_obj));
+		}
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
+});
+
+router.get(/^\/detail\/id\/([1-9]{1}[0-9]*)$/, auth, function(req, res, next) {
+	var sql = 'SELECT * from blog_article where id = ?';
+	var params = [parseInt(req.params[0])];
+
+	database.QueryMySQL( sql, params ).then(
+		function (result) {
+			var ret_obj = {
+				code: 0,
+				data: result
+			};
+			res.send(JSON.stringify(ret_obj));
+		}
+	).catch(
+		function (err) {
+			SendErrJson(res, err);
+		}
+	)
 });
 
 function dateFtt(fmt, date) { //author: meizz   

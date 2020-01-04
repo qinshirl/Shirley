@@ -209,7 +209,7 @@
     //从服务器请求最新文章列表
     axios.get('/list/latest')
         .then(function (response) {
-            latest_vm.latests = response.data;
+            latest_vm.latests = response.data.data;
         })
         .catch(function (error) {
             console.log(error);
