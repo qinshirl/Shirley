@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="some_id">
+        <some_component_name v-for="some_returned in some_returned_value" :key="some_returned.id"
+         :parament_obj="some_returned">
+
+        </some_component_name>
+    </div>
+
+</body>
+
+<script>
+
+    var some_var = new Vue ({
+        el: '#some_id',
+        data: function () {
+            return {
+                some_returned_value: null,
+            }
+        }
+    });
+
+    Vue.component('some_component_name', {
+        props: ['parament_obj'],
+        template: '<div> id is: {{parament_obj.id }} sid is: {{parament_obj.sid}} grade is:{{parament_obj.grade}} subject is: {{parament_obj.subject}}</div>'
+    });
+
+
+
+    axios.get('/test_1')
+        .then(function (response) {
+            // handle success
+            some_var.some_returned_value = response.data;
+
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+
+
+</script>
+
+</html>
