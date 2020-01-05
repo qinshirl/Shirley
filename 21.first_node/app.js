@@ -1,5 +1,8 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 app.get('/', function (req, res) {
@@ -70,6 +73,26 @@ app.get('/all_data', function (req, res){
 
     connection.end();
 
+
+})
+
+//get demo
+app.get('/getDemo', function (req, res) {
+
+    console.log(req);
+    //console.log(req.query.id);
+
+    res.send("jjjj");
+
+})
+
+//post demo
+app.post('/postDemo', function (req, res) {
+
+    console.log(req.body);
+    //console.log(req.query.id);
+
+    res.send("111111");
 
 })
 

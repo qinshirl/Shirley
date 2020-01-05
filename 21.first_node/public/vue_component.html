@@ -13,18 +13,14 @@
 
 <body>
 
-<div id="website_list">
+<ul id="website_list">
     <website_display v-for="single_obj in websites" :key="single_obj.id"
         :parament_obj="single_obj"></website_display>
-</div>
+</ul>
 
 </body>
 
 <script>
-    Vue.component('website_display', {
-        props: ['parament_obj'],
-        template: '#website_tmp'
-    });
 
     var vm_websites = new Vue({
         el: '#website_list',
@@ -33,6 +29,11 @@
                 websites: null,
             }
         },
+    });
+
+    Vue.component('website_display', {
+        props: ['parament_obj'],
+        template: '#website_tmp'
     });
 
     axios.get('/all_data')
