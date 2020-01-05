@@ -13,19 +13,17 @@ function SendErrJson(res, err) {
 	res.send(JSON.stringify(result));
 }
 
-var auth = function(req, res, next) {
+var auth = function (req, res, next) {
 	//鉴定用户
-	if(req.session.authorized === 1) {
+	if (req.session.authorized === 1) {
 		return next();
-	} else {
-		var result = {
-			code: -1,
-			msg: "登录超时，请<a href=\"#\" onclick=\"top.location.href='/admin/login.htm';window.location.href='/admin/login.htm';\"><font color='red'>重新登录</font></a>"
-		};
-		return res.send(JSON.stringify(result));
 	}
 
-	return next();
+	var result = {
+		code: -1,
+		msg: "登录超时，请<a href=\"#\" onclick=\"top.location.href='/admin/login.htm';window.location.href='/admin/login.htm';\"><font color='red'>重新登录</font></a>"
+	};
+	return res.send(JSON.stringify(result));
 }
 
 router.get('/login', function(req, res, next) {

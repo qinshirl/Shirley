@@ -19,8 +19,8 @@ module.exports.QueryMySQL = function () {
                 user: config_mysql.user,
                 password: config_mysql.password,
                 database: config_mysql.database,
-                connectionLimit: config_mysql.max_connections, //最大5个连接，请与数据库设置保持一致
-                multipleStatements: true, //允许一次性执行多个SQL语句
+                connectionLimit: config_mysql.max_connections,
+                multipleStatements: false, //允许一次性执行多个SQL语句，开启可能导致安全问题，故此处禁用
             });
         }
 
