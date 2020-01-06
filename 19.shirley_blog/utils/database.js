@@ -1,9 +1,6 @@
 var config = require('config');
 var mysql = require('mysql');
 
-var database = function () {
-};
-
 var connection = null;
 
 module.exports.QueryMySQL = function () {
@@ -49,5 +46,3 @@ module.exports.QueryMySQL = function () {
         }
     });
 }
-
-module.exports.database = database;

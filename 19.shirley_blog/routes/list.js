@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var database = require('./database')
+var database = require('../utils/database')
 
 function SendErrJson(res, err) {
 	var result = {

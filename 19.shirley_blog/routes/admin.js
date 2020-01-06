@@ -3,7 +3,7 @@ var router = express.Router()
 var fs = require("fs");
 var path = require('path');
 var formidable = require('formidable');
-var database = require('./database')
+var database = require('../utils/database')
 
 function SendErrJson(res, err) {
 	var result = {
@@ -25,6 +25,10 @@ var auth = function (req, res, next) {
 	};
 	return res.send(JSON.stringify(result));
 }
+
+router.get("/", function(req, res, next) {
+	res.redirect('login.htm');
+});
 
 router.get('/login', function(req, res, next) {
 	var sql = 'select * from blog_user where `name` = ?';
