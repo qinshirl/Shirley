@@ -107,6 +107,11 @@ a:hover{
     min-height: 120px;
 }
 
+.article_text img{
+    max-width:100% !important;
+    height: auto !important;
+}
+
 .article_bottom {
     height: 30px;
     width: 500px;
