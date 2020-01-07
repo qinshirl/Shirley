@@ -7,6 +7,8 @@ var indexRouter = require('./routes/index');
 var listRouter = require('./routes/list');
 var adminRouter = require('./routes/admin');
 
+var databsse = require('./utils/database');
+
 var app = express();
 
 app.set('trust proxy', 1) // trust first proxy
@@ -23,6 +25,9 @@ app.use(session({
   	maxAge : 1000 * 60 * 30 //半小时无操作视为用户退出
   }
 }));
+
+//初始化MySQL连接池
+databsse.Initialize();
 
 //允许跨域请求json
 app.all('*', function(req, res, next) {
